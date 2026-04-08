@@ -24,7 +24,7 @@ jobs:
     - name: Check Python syntax
       run: |
         python -m py_compile app.py
-        
+
     - name: Install Bandit
       run: |
         pip install bandit
@@ -32,3 +32,7 @@ jobs:
     - name: Run Security Scan
       run: |
         bandit -r . || true
+
+    - name: Build Docker Image
+      run: |
+        docker build -t secure-notes-app .    
