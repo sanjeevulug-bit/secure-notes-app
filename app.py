@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect
-import os
+import html
 
 app = Flask(__name__)
 
@@ -7,11 +7,17 @@ notes = []
 
 @app.route('/')
 def home():
-    return open("index.html").read().replace("{{notes}}", "<br>".join(notes))
+    safe_notes = [html.escape(note) for note in notes]
+    return open("index.html").read().replace("{{notes}}", "<br>".join(safe_notes))
 
 @app.route('/add', methods=['POST'])
 def add_note():
     note = request.form['note']
+
+    # Basic validation
+    if len(note) > 100:
+        return "Note too long!"
+
     notes.append(note)
     return redirect('/')
 
